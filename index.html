@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyber Fraud Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: auto;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 0;
+        }
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            background: linear-gradient(145deg, #111b2e, #0f1629);
+            border-radius: 20px;
+            padding: 24px 24px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2a3a5c;
+            margin: 0 auto;
+        }
+        .title {
+            color: #e8edf5;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #2a4b7a;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .title small {
+            font-size: 13px;
+            font-weight: 400;
+            color: #8899bb;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 20px 0 18px;
+        }
+        .kpi-card {
+            background: rgba(20, 40, 70, 0.55);
+            backdrop-filter: blur(2px);
+            border-radius: 16px;
+            padding: 16px 10px 12px;
+            text-align: center;
+            border: 1px solid #2d4068;
+            box-shadow: inset 0 0 30px rgba(0, 80, 200, 0.06);
+            transition: 0.25s;
+        }
+        .kpi-card:hover {
+            border-color: #4a7fc1;
+            background: rgba(30, 55, 100, 0.6);
+        }
+        .kpi-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #7bb3ff;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        .kpi-number .unit {
+            font-size: 18px;
+            font-weight: 600;
+            color: #5a8fd0;
+        }
+        .kpi-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #a5b9da;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .kpi-card:nth-child(2) .kpi-number {
+            color: #f5c542;
+        }
+        .kpi-card:nth-child(3) .kpi-number {
+            color: #5fd9b0;
+        }
+        .kpi-card:nth-child(4) .kpi-number {
+            color: #f28b82;
+        }
+        .chart-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 4px;
+        }
+        .chart-box {
+            flex: 2;
+            min-width: 280px;
+            background: rgba(12, 24, 44, 0.7);
+            border-radius: 18px;
+            padding: 10px 8px 4px;
+            border: 1px solid #253a5a;
+        }
+        .chart-box#chart-gauge {
+            flex: 1.2;
+            min-width: 180px;
+        }
+        .chart-box h4 {
+            color: #b0c8ee;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding-left: 8px;
+            margin-bottom: 0px;
+            opacity: 0.8;
+        }
+        .chart-container {
+            width: 100%;
+            height: 180px;
+        }
+        #gauge-container {
+            height: 170px;
+        }
+        .footer-note {
+            margin-top: 14px;
+            color: #4f6b95;
+            font-size: 12px;
+            text-align: right;
+            border-top: 1px solid #1d2d48;
+            padding-top: 12px;
+            letter-spacing: 0.4px;
+        }
+        .footer-note span {
+            color: #6d8fc7;
+        }
+        @media (max-width: 992px) {
+            .dashboard {
+                padding: 20px 18px 24px;
+                border-radius: 16px;
+            }
+            .kpi-number {
+                font-size: 32px;
+            }
+            .kpi-grid {
+                gap: 12px;
+            }
+        }
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .chart-row {
+                flex-direction: column;
+            }
+            .title {
+                font-size: 18px;
+            }
+            .kpi-number {
+                font-size: 28px;
+            }
+            .kpi-label {
+                font-size: 11px;
+            }
+            .chart-container {
+                height: 160px;
+            }
+            #gauge-container {
+                height: 150px;
+            }
+            .dashboard {
+                padding: 16px 14px 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .dashboard {
+                padding: 12px 10px 16px;
+                border-radius: 12px;
+            }
+            .kpi-number {
+                font-size: 22px;
+            }
+            .kpi-number .unit {
+                font-size: 14px;
+            }
+            .kpi-label {
+                font-size: 10px;
+            }
+            .title {
+                font-size: 16px;
+            }
+            .title small {
+                font-size: 11px;
+            }
+            .chart-container {
+                height: 140px;
+            }
+            #gauge-container {
+                height: 130px;
+            }
+            .chart-box {
+                min-width: auto;
+                padding: 8px 6px 2px;
+            }
+            .chart-box h4 {
+                font-size: 10px;
+            }
+            .footer-note {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+
+        <div class="title">
+            <span>🛡️ Cyber Fraud · Global Stats</span>
+            <small>Q2 2026 · Real‑time</small>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-number">2000<span class="unit">+</span></div>
+                <div class="kpi-label">Total Incidents</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number">95<span class="unit">%</span></div>
+                <div class="kpi-label">Detection Rate</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number">24<span class="unit">/7</span></div>
+                <div class="kpi-label">Monitoring</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number">100<span class="unit">+</span></div>
+                <div class="kpi-label">Countries Affected</div>
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h4>📈 Monthly Incidents (last 6 months)</h4>
+                <div id="bar-container" class="chart-container"></div>
+            </div>
+            <div class="chart-box" id="chart-gauge">
+                <h4>🎯 Detection Rate</h4>
+                <div id="gauge-container"></div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <span>●</span> Live data · <span>●</span> 24/7 AI monitoring · <span>●</span> 100+ regions
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var barChart = echarts.init(document.getElementById('bar-container'));
+            var barOption = {
+                grid: {
+                    left: '6%',
+                    right: '4%',
+                    top: '10%',
+                    bottom: '16%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    axisLabel: {
+                        color: '#8aa3cc',
+                        fontWeight: 500,
+                        fontSize: 12
+                    },
+                    axisLine: { lineStyle: { color: '#2f4570' } },
+                    axisTick: { show: false }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: {
+                        lineStyle: { color: '#1d2f4a', type: 'dashed' }
+                    },
+                    axisLabel: {
+                        color: '#8aa3cc',
+                        fontSize: 11
+                    },
+                    name: 'cases',
+                    nameTextStyle: {
+                        color: '#6a88b0',
+                        fontSize: 11
+                    }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [
+                        { value: 320, itemStyle: { color: '#3b77c9' } },
+                        { value: 410, itemStyle: { color: '#4e89e0' } },
+                        { value: 540, itemStyle: { color: '#5f9af5' } },
+                        { value: 670, itemStyle: { color: '#78b0ff' } },
+                        { value: 890, itemStyle: { color: '#9bc4ff' } },
+                        { value: 1050, itemStyle: { color: '#b8d6ff' } }
+                    ],
+                    barWidth: '40%',
+                    itemStyle: {
+                        borderRadius: [4, 4, 0, 0],
+                        shadowColor: 'rgba(60, 140, 255, 0.2)',
+                        shadowBlur: 8
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#b8cef2',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        formatter: function(p) {
+                            return p.value;
+                        }
+                    }
+                }],
+                backgroundColor: 'transparent'
+            };
+            barChart.setOption(barOption);
+
+            var gaugeChart = echarts.init(document.getElementById('gauge-container'));
+            var gaugeOption = {
+                series: [{
+                    type: 'gauge',
+                    center: ['50%', '58%'],
+                    radius: '78%',
+                    startAngle: 200,
+                    endAngle: -20,
+                    min: 0,
+                    max: 100,
+                    splitNumber: 5,
+                    progress: {
+                        show: true,
+                        width: 12,
+                        roundCap: true,
+                        itemStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 1,
+                                y2: 0,
+                                colorStops: [
+                                    { offset: 0, color: '#3b7fd4' },
+                                    { offset: 1, color: '#f5c542' }
+                                ]
+                            }
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            width: 12,
+                            color: [
+                                [1, '#1f3452']
+                            ]
+                        }
+                    },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    anchor: {
+                        show: true,
+                        size: 16,
+                        icon: 'circle',
+                        itemStyle: {
+                            borderColor: '#7bb3ff',
+                            borderWidth: 3,
+                            color: '#0b1628'
+                        }
+                    },
+                    pointer: {
+                        icon: 'path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v3.7c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.5,0.7,2.9,0.7z',
+                        width: 6,
+                        length: '65%',
+                        itemStyle: {
+                            color: '#f0f5ff'
+                        }
+                    },
+                    detail: {
+                        valueAnimation: true,
+                        formatter: '{value}%',
+                        color: '#e8effa',
+                        fontSize: 24,
+                        fontWeight: 700,
+                        offsetCenter: [0, '38%'],
+                        fontFamily: 'Segoe UI, Arial'
+                    },
+                    title: {
+                        offsetCenter: [0, '68%'],
+                        fontSize: 12,
+                        color: '#8aa3cc',
+                        fontWeight: 500
+                    },
+                    data: [{
+                        value: 95,
+                        name: 'Detection Rate'
+                    }]
+                }]
+            };
+            gaugeChart.setOption(gaugeOption);
+
+            window.addEventListener('resize', function() {
+                barChart.resize();
+                gaugeChart.resize();
+            });
+
+        });
+    </script>
+
+</body>
+</html>
